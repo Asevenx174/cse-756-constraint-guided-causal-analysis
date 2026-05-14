@@ -5,21 +5,6 @@ def get_asia_expert_knowledge(
     use_expert_knowledge=False,
     knowledge_type="basic",
 ):
-    """
-    Return ASIA expert knowledge for causal discovery.
-
-    By default, returns None so the learning algorithm runs without expert knowledge.
-
-    Parameters
-    ----------
-    use_expert_knowledge:
-        If False, no expert knowledge is used.
-
-    knowledge_type:
-        "basic"      : small safe set of required/forbidden edges.
-        "forbidden"  : only forbidden edges.
-        "required"   : only required edges.
-    """
     if not use_expert_knowledge:
         return None
 
@@ -85,5 +70,5 @@ def get_asia_expert_knowledge(
         )
 
     raise ValueError(
-        "knowledge_type must be one of: 'basic', 'forbidden', or 'required'."
+        "knowledge_type must be one of: 'basic', 'forbidden', or 'required' or 'ideal' or 'temporal'."
     )

@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from src.simulation.asia import load_asia_model
 from src.visualization.graphviz_plot import save_graphviz_dag
 

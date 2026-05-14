@@ -28,7 +28,7 @@ def main():
     # Available knowledge_type values:
     # "basic"
     # "forbidden"
-    # "required"
+    # "required", "idea", "temporal"
 
     learned_dag = learn_pc_discrete(
         samples=asia_samples,

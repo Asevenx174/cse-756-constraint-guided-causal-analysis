@@ -28,7 +28,7 @@ def main():
     # Available knowledge_type values:
     # "basic"
     # "forbidden"
-    # "required"
+    # "required", "temporal", "ideal"
 
     learned_dag = learn_hill_climb_discrete(
         samples=asia_samples,
