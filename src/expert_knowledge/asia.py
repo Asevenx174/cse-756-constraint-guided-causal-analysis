@@ -25,7 +25,8 @@ def get_asia_expert_knowledge(
 
     if knowledge_type == "basic":
         return ExpertKnowledge(
-        )
+            required_edges = [
+        ("asia", "tub")])
         
     if knowledge_type == "ideal":
         return ExpertKnowledge(
