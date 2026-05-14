@@ -1,7 +1,10 @@
 from src.simulation.asia import simulate_asia_samples
 from src.structure_learning.constraint_based import learn_pc_discrete
 from src.estimation.parameter_estimation import estimate_parameters_mle
-from src.inference.probabilistic_inference import query_probability
+from src.inference.probabilistic_inference import (
+    query_probability,
+    query_map_assignment,
+)
 
 
 def main():
@@ -37,6 +40,39 @@ def main():
 
     print("\nP(xray | either=yes)")
     print(result)
+
+    joint_result = query_probability(
+        fitted_model=fitted_model,
+        query_variables=["lung", "bronc"],
+        evidence={"dysp": "yes"},
+        joint=True,
+    )
+
+    print("\nJoint query: P(lung, bronc | dysp=yes)")
+    print(joint_result)
+
+    marginal_results = query_probability(
+        fitted_model=fitted_model,
+        query_variables=["lung", "bronc"],
+        evidence={"dysp": "yes"},
+        joint=False,
+    )
+
+    print("\nSeparate marginal queries with joint=False")
+    print("-----------------------------------------")
+
+    for variable, distribution in marginal_results.items():
+        print(f"\nP({variable} | dysp=yes)")
+        print(distribution)
+
+    map_result = query_map_assignment(
+        fitted_model=fitted_model,
+        query_variables=["lung", "bronc"],
+        evidence={"dysp": "yes"},
+    )
+
+    print("\nMAP query: most likely lung and bronc given dysp=yes")
+    print(map_result)
 
 
 if __name__ == "__main__":
