@@ -1,41 +1,24 @@
-from src.simulation.asia import simulate_asia_samples
-from src.structure_learning.constraint_based import learn_pc_discrete
-from src.estimation.parameter_estimation import estimate_parameters_mle
+from pathlib import Path
+
+from src.persistence.model_io import load_model_pickle
 from src.inference.probabilistic_inference import (
     query_probability,
     query_map_assignment,
 )
-from src.structure_learning.score_based import (
-    learn_hill_climb_discrete,
-    learn_ges_discrete,
-)
 
 
-def main():
-    asia_samples = simulate_asia_samples(n_samples=10000)
+def run_probabilistic_inference_for_model(model_path, model_name):
+    fitted_model = load_model_pickle(model_path)
 
-    # Option 1: Constraint-based structure learning using PC.
-    learned_dag = learn_pc_discrete(
-        samples=asia_samples
-    )
-    
-     # Option 2: Score-based structure learning using Hill Climb.
-    # Uncomment this block and comment out the PC block above to use Hill Climb.
-    # learned_dag = learn_hill_climb_discrete(
-    #     samples=asia_samples
-    # )
+    print("\n" + "=" * 70)
+    print(model_name)
+    print("=" * 70)
 
-    # Option 3: Score-based structure learning using GES.
-    # Uncomment this block and comment out the PC block above to use GES.
-    # learned_dag = learn_ges_discrete(
-    #     samples=asia_samples
-    # )
+    print("\nModel valid:")
+    print(fitted_model.check_model())
 
-    fitted_model = estimate_parameters_mle(
-        learned_dag=learned_dag,
-        samples=asia_samples,
-        print_cpds=False,
-    )
+    print("\nModel edges:")
+    print(list(fitted_model.edges()))
 
     print("\nProbabilistic Inference")
     print("-----------------------")
@@ -90,6 +73,40 @@ def main():
 
     print("\nMAP query: most likely lung and bronc given dysp=yes")
     print(map_result)
+
+
+def main():
+    fitted_models = [
+        {
+            "path": "results/models/asia_pc_fitted.pkl",
+            "model_name": "PC fitted model",
+        },
+        {
+            "path": "results/models/asia_hill_climb_fitted.pkl",
+            "model_name": "Hill Climb fitted model",
+        },
+        {
+            "path": "results/models/asia_ges_fitted.pkl",
+            "model_name": "GES fitted model",
+        },
+        {
+            "path": "results/models/asia_hill_climb_expert_basic_fitted.pkl",
+            "model_name": "Hill Climb expert basic fitted model",
+        },
+    ]
+
+    for item in fitted_models:
+        model_path = Path(item["path"])
+
+        if not model_path.exists():
+            print("\nSkipping missing model:")
+            print(model_path)
+            continue
+
+        run_probabilistic_inference_for_model(
+            model_path=model_path,
+            model_name=item["model_name"],
+        )
 
 
 if __name__ == "__main__":
