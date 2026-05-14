@@ -13,7 +13,7 @@ def main():
        # Default: no expert knowledge.
     # Caution !If you make it false then you will override the non-expert-guided dag
     use_expert_knowledge = False
-    knowledge_type = "ideal"
+    knowledge_type = "basic"
     
     expert_knowledge = get_asia_expert_knowledge(
         use_expert_knowledge=use_expert_knowledge,
