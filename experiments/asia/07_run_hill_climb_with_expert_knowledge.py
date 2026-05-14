@@ -11,6 +11,8 @@ from src.persistence.model_io import save_model_pickle
 
 def main():
     true_model = load_asia_model()
+    save_model = False
+    save_graph = False
 
     n_samples = 10000
     seed = 42
@@ -47,11 +49,17 @@ def main():
     graph_output_path = f"results/graphs/{run_name}.png"
     model_output_path = f"results/models/{run_name}_fitted.pkl"
 
-    save_graphviz_dag(
+    if save_graph:
+        save_graphviz_dag(
         model_or_graph=learned_dag,
-        output_path=graph_output_path,
+        output_path="results/graphs/asia_ges_learned.png",
         layout="dot",
-    )
+        )
+
+        print("\nGraph saved to:")
+        print("results/graphs/asia_ges_learned.png")
+    else:
+        print("\nGraph saving skipped.")
 
     print("\nGraph saved to:")
     print(graph_output_path)
@@ -68,13 +76,15 @@ def main():
         print_cpds=True,
     )
 
-    save_model_pickle(
+    if save_model:
+        save_model_pickle(
         model=fitted_model,
         output_path=model_output_path,
     )
-
-    print("\nFitted expert-guided model saved to:")
-    print(model_output_path)
+        print("\nFitted model saved to:")
+        print(model_output_path)
+    else:
+        print("\nModel saving skipped.")
 
 
 if __name__ == "__main__":

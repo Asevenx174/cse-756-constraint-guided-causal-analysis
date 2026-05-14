@@ -8,6 +8,8 @@ from src.persistence.model_io import save_model_pickle
 def main():
     true_model = load_asia_model()
     asia_samples = simulate_asia_samples(n_samples=10000)
+    save_model = False
+    save_graph = False
     
     learned_dag = learn_ges_discrete(
         samples=asia_samples
@@ -26,6 +28,18 @@ def main():
     layout="dot",
 )
     
+    if save_graph:
+        save_graphviz_dag(
+        model_or_graph=learned_dag,
+        output_path="results/graphs/asia_ges_learned.png",
+        layout="dot",
+        )
+
+        print("\nGraph saved to:")
+        print("results/graphs/asia_ges_learned.png")
+    else:
+        print("\nGraph saving skipped.")
+    
     print("\n All scores:")
     print(scores)
     
@@ -40,13 +54,15 @@ def main():
     
     model_output_path = "results/models/asia_ges_fitted.pkl"
 
-    save_model_pickle(
-    model=fitted_model,
-    output_path=model_output_path,
-)
-
-    print("\nFitted model saved to:")
-    print(model_output_path)
+    if save_model:
+        save_model_pickle(
+        model=fitted_model,
+        output_path=model_output_path,
+    )
+        print("\nFitted model saved to:")
+        print(model_output_path)
+    else:
+        print("\nModel saving skipped.")
     
 if __name__ == "__main__":
     main()

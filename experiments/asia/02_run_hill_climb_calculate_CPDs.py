@@ -14,6 +14,8 @@ def main():
     # Caution !If you make it false then you will override the non-expert-guided dag
     use_expert_knowledge = True
     knowledge_type = "basic"
+    save_model = False
+    save_graph = False
     
     expert_knowledge = get_asia_expert_knowledge(
         use_expert_knowledge=use_expert_knowledge,
@@ -45,11 +47,17 @@ def main():
     else:
         graph_output_path = "results/graphs/asia_hill_climb_learned.png"
         
-    save_graphviz_dag(
+    if save_graph:
+        save_graphviz_dag(
         model_or_graph=learned_dag,
         output_path=graph_output_path,
         layout="dot",
-    )
+        )
+
+        print("\nGraph saved to:")
+        print(graph_output_path)
+    else:
+        print("\nGraph saving skipped.")
     
     print("\n All scores:")
     print(scores)
@@ -68,13 +76,15 @@ def main():
     else:
         model_output_path = "results/models/asia_hill_climb_fitted.pkl"
 
-    save_model_pickle(
-    model=fitted_model,
-    output_path=model_output_path,
-)
-
-    print("\nFitted model saved to:")
-    print(model_output_path)
+    if save_model:
+        save_model_pickle(
+        model=fitted_model,
+        output_path=model_output_path,
+    )
+        print("\nFitted model saved to:")
+        print(model_output_path)
+    else:
+        print("\nModel saving skipped.")
     
 if __name__ == "__main__":
     main()
