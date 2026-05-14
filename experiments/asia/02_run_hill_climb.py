@@ -2,6 +2,7 @@ from src.simulation.asia import load_asia_model, simulate_asia_samples
 from src.structure_learning.score_based import learn_hill_climb_discrete
 from src.evaluation.graph_metrics import evaluate_graph_recovery
 from src.visualization.graphviz_plot import save_graphviz_dag
+from src.estimation.parameter_estimation import estimate_parameters_mle
 
 def main():
     true_model = load_asia_model()
@@ -26,6 +27,15 @@ def main():
     
     print("\n All scores:")
     print(scores)
+    
+    print("\nParameter Estimation: MLE")
+    print("-------------------------")
+
+    estimate_parameters_mle(
+        learned_dag=learned_dag,
+        samples=asia_samples,
+        print_cpds=True,
+    )
     
 if __name__ == "__main__":
     main()
