@@ -34,6 +34,10 @@ def main():
             "path": "results/models/asia_ges_fitted.pkl",
             "algorithm_name": "GES fitted model",
         },
+        {
+            "path": "results/models/asia_hill_climb_expert_basic_fitted.pkl",
+            "algorithm_name": "Hill Climb expert fitted model",
+        }
     ]
 
     all_scores = []
