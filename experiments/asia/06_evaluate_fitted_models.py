@@ -65,10 +65,6 @@ def main():
             scores["algorithm"],
             "| Skeleton F1:",
             scores["skeleton_f1"],
-            "| Directed F1:",
-            scores["directed_f1"],
-            "| Orientation F1:",
-            scores["orientation_f1"],
         )
 
 
