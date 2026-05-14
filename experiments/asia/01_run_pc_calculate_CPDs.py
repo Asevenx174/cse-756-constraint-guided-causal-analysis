@@ -4,6 +4,7 @@ from src.evaluation.graph_metrics import evaluate_graph_recovery
 from src.visualization.graphviz_plot import save_graphviz_dag
 from src.estimation.parameter_estimation import estimate_parameters_mle
 from src.expert_knowledge.asia import get_asia_expert_knowledge
+from src.persistence.model_io import save_model_pickle
 
 def main():
     true_model = load_asia_model()
@@ -56,11 +57,24 @@ def main():
     print("\nParameter Estimation: MLE")
     print("-------------------------")
 
-    estimate_parameters_mle(
-        learned_dag=learned_dag,
-        samples=asia_samples,
-        print_cpds=True,
+    fitted_model = estimate_parameters_mle(
+    learned_dag=learned_dag,
+    samples=asia_samples,
+    print_cpds=True,
+)
+    
+    if use_expert_knowledge:
+        model_output_path = f"results/models/asia_pc_fitted_expert_{knowledge_type}.pkl"
+    else:
+        model_output_path = "results/models/asia_pc_fitted.pkl"
+
+        save_model_pickle(
+    model=fitted_model,
+    output_path=model_output_path,
     )
+
+    print("\nFitted model saved to:")
+    print(model_output_path)
     
 if __name__ == "__main__":
     main()
