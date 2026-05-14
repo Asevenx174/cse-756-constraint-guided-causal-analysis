@@ -2,7 +2,38 @@ import numpy as np
 import networkx as nx
 from sklearn.metrics import f1_score
 
+def print_missing_and_extra_edges(
+    estimated_model,
+    true_model,
+    model_name=None,
+):
+    true_edges = set(true_model.edges())
+    estimated_edges = set(estimated_model.edges())
 
+    missing_edges = sorted(true_edges - estimated_edges)
+    extra_edges = sorted(estimated_edges - true_edges)
+
+    if model_name is not None:
+        print("\n" + "=" * 70)
+        print(model_name)
+        print("=" * 70)
+
+    print("\nNumber of missing edges:", len(missing_edges))
+    print("Missing edges:")
+    if missing_edges:
+        for edge in missing_edges:
+            print(edge)
+    else:
+        print("None")
+
+    print("\nNumber of extra edges:", len(extra_edges))
+    print("Extra edges:")
+    if extra_edges:
+        for edge in extra_edges:
+            print(edge)
+    else:
+        print("None")
+        
 def evaluate_graph_recovery(
     estimated_model,
     true_model,
