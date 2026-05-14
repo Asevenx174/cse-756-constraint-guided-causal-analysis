@@ -5,14 +5,31 @@ from src.inference.probabilistic_inference import (
     query_probability,
     query_map_assignment,
 )
+from src.structure_learning.score_based import (
+    learn_hill_climb_discrete,
+    learn_ges_discrete,
+)
 
 
 def main():
     asia_samples = simulate_asia_samples(n_samples=10000)
 
+    # Option 1: Constraint-based structure learning using PC.
     learned_dag = learn_pc_discrete(
         samples=asia_samples
     )
+    
+     # Option 2: Score-based structure learning using Hill Climb.
+    # Uncomment this block and comment out the PC block above to use Hill Climb.
+    # learned_dag = learn_hill_climb_discrete(
+    #     samples=asia_samples
+    # )
+
+    # Option 3: Score-based structure learning using GES.
+    # Uncomment this block and comment out the PC block above to use GES.
+    # learned_dag = learn_ges_discrete(
+    #     samples=asia_samples
+    # )
 
     fitted_model = estimate_parameters_mle(
         learned_dag=learned_dag,
