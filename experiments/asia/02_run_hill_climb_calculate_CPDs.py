@@ -12,7 +12,7 @@ def main():
        # Default: no expert knowledge.
     # Caution !If you make it false then you will override the non-expert-guided dag
     use_expert_knowledge = True
-    knowledge_type = "basic"
+    knowledge_type = "ideal"
     
     expert_knowledge = get_asia_expert_knowledge(
         use_expert_knowledge=use_expert_knowledge,
@@ -39,11 +39,16 @@ def main():
         print_scores=True
     )
     
+    if use_expert_knowledge:
+        graph_output_path = f"results/graphs/asia_hill_climb_learned_expert_{knowledge_type}.png"
+    else:
+        graph_output_path = "results/graphs/asia_hill_climb_learned.png"
+        
     save_graphviz_dag(
-    model_or_graph=learned_dag,
-    output_path="results/graphs/asia_hill_climb_learned.png",
-    layout="dot",
-)
+        model_or_graph=learned_dag,
+        output_path=graph_output_path,
+        layout="dot",
+    )
     
     print("\n All scores:")
     print(scores)

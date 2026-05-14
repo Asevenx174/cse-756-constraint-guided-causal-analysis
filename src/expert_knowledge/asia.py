@@ -24,7 +24,43 @@ def get_asia_expert_knowledge(
         return None
 
     if knowledge_type == "basic":
-        return ExpertKnowledge()
+        return ExpertKnowledge(
+            required_edges=[
+                ("asia", "tub")
+            ],
+        )
+        
+    if knowledge_type == "ideal":
+        return ExpertKnowledge(
+            required_edges = [
+        ("asia", "tub"),
+        ("smoke", "lung"),
+        ("smoke", "bronc"),
+        ("tub", "either"),
+        ("lung", "either"),
+        ("either", "xray"),
+        ("either", "dysp"),
+        ("bronc", "dysp"),
+    ],
+
+    forbidden_edges = [
+        ("tub", "asia"),
+        ("lung", "smoke"),
+        ("bronc", "smoke"),
+        ("either", "tub"),
+        ("either", "lung"),
+        ("xray", "either"),
+        ("dysp", "either"),
+        ("dysp", "bronc"),
+    ],
+
+            temporal_order = [
+        ["asia", "smoke"],
+        ["tub", "lung", "bronc"],
+        ["either"],
+        ["xray", "dysp"],
+    ]
+        )
         
     if knowledge_type == "temporal":
         return ExpertKnowledge(
