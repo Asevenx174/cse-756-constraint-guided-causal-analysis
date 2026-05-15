@@ -1,6 +1,45 @@
 import numpy as np
 import networkx as nx
 from sklearn.metrics import f1_score
+from pgmpy.metrics import OrientationConfusionMatrix
+
+def evaluate_edge_orientation(
+    estimated_model,
+    true_model,
+    algorithm_name=None,
+    print_scores=True,
+):
+    """
+    Evaluate edge direction/orientation using pgmpy's OrientationConfusionMatrix.
+
+    This metric checks whether common skeleton edges have the correct direction.
+    It is direction-aware and only applies to DAGs.
+    """
+
+    orientation_metric = OrientationConfusionMatrix(
+        metrics=["precision", "recall", "f1"]
+    )
+
+    scores = orientation_metric(
+        true_causal_graph=true_model,
+        est_causal_graph=estimated_model,
+    )
+
+    if print_scores:
+        if algorithm_name is not None:
+            print("\nAlgorithm:", algorithm_name)
+            print("-" * (len("Algorithm: ") + len(algorithm_name)))
+
+        print("Orientation Precision:", scores["precision"])
+        print("Orientation Recall:", scores["recall"])
+        print("Orientation F1:", scores["f1"])
+
+    return {
+        "algorithm": algorithm_name,
+        "orientation_precision": scores["precision"],
+        "orientation_recall": scores["recall"],
+        "orientation_f1": scores["f1"],
+    }
 
 def print_missing_and_extra_edges(
     estimated_model,

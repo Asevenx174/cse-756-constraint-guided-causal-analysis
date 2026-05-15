@@ -2,20 +2,36 @@ from pathlib import Path
 
 from src.simulation.asia import load_asia_model
 from src.persistence.model_io import load_model_pickle
-from src.evaluation.graph_metrics import evaluate_graph_recovery
+from src.evaluation.graph_metrics import (
+    evaluate_graph_recovery,
+    evaluate_edge_orientation,
+)
 
 
 def evaluate_fitted_model(model_path, true_model, algorithm_name):
     fitted_model = load_model_pickle(model_path)
 
-    scores = evaluate_graph_recovery(
+    skeleton_scores = evaluate_graph_recovery(
         estimated_model=fitted_model,
         true_model=true_model,
         algorithm_name=algorithm_name,
         print_scores=True,
     )
 
-    return scores
+    orientation_scores = evaluate_edge_orientation(
+        estimated_model=fitted_model,
+        true_model=true_model,
+        algorithm_name=algorithm_name,
+        print_scores=True,
+    )
+
+    return {
+        "algorithm": algorithm_name,
+        "skeleton_f1": skeleton_scores["skeleton_f1"],
+        "orientation_precision": orientation_scores["orientation_precision"],
+        "orientation_recall": orientation_scores["orientation_recall"],
+        "orientation_f1": orientation_scores["orientation_f1"],
+    }
 
 
 def main():
@@ -37,7 +53,7 @@ def main():
         {
             "path": "results/models/asia_hill_climb_expert_basic_fitted.pkl",
             "algorithm_name": "Hill Climb expert fitted model",
-        }
+        },
     ]
 
     all_scores = []
@@ -66,10 +82,12 @@ def main():
 
     for scores in all_scores:
         print(
-            scores["algorithm"],
-            "| Skeleton F1:",
-            scores["skeleton_f1"],
-        )
+        scores["algorithm"],
+        "| Skeleton F1:",
+        scores["skeleton_f1"],
+        "| Orientation F1:",
+        scores["orientation_f1"],
+    )
 
 
 if __name__ == "__main__":
