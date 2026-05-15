@@ -33,11 +33,19 @@ def identify_minimal_adjustment_set(model_or_graph, exposure, outcome):
             variant="minimal"
         ).identify(dag)
 
+        if not success:
+            return None, False, "No valid minimal adjustment set was identified."
+
         adjustment_set = identified_graph.get_role("adjustment")
 
-        return adjustment_set, success, None
+        if adjustment_set is None:
+            adjustment_set = []
 
-    except ValueError as error:
+        adjustment_set = sorted(list(adjustment_set))
+
+        return adjustment_set, True, None
+
+    except Exception as error:
         return None, False, str(error)
 
 
@@ -48,7 +56,7 @@ def compare_adjustment_sets(
     outcome,
 ):
     """
-    Compare minimal adjustment sets from the true DAG and learned DAG.
+    Compare minimal adjustment sets from the true DAG and learned/fitted DAG.
     """
     true_adjustment_set, true_success, true_error = identify_minimal_adjustment_set(
         model_or_graph=true_model,
@@ -68,13 +76,21 @@ def compare_adjustment_sets(
     comparison = {
         "exposure": exposure,
         "outcome": outcome,
+
         "true_adjustment_set": true_adjustment_set,
         "true_success": true_success,
         "true_error": true_error,
+
         "learned_adjustment_set": learned_adjustment_set,
         "learned_success": learned_success,
         "learned_error": learned_error,
-        "same_adjustment_set": true_success and learned_success and true_set == learned_set,
+
+        "same_adjustment_set": (
+            true_success
+            and learned_success
+            and true_set == learned_set
+        ),
+
         "missing_from_learned": sorted(true_set - learned_set),
         "extra_in_learned": sorted(learned_set - true_set),
     }
