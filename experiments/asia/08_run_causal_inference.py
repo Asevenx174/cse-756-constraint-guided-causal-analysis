@@ -5,6 +5,30 @@ from pgmpy.inference import CausalInference
 from src.persistence.model_io import load_model_pickle
 
 
+def print_causal_query(
+    causal_inference,
+    title,
+    query_variables,
+    intervention,
+    evidence=None,
+):
+    try:
+        result = causal_inference.query(
+            variables=query_variables,
+            do=intervention,
+            evidence=evidence,
+            show_progress=False,
+        )
+
+        print(f"\n{title}")
+        print(result)
+
+    except Exception as error:
+        print(f"\n{title}")
+        print("Skipped invalid causal query.")
+        print("Reason:", error)
+
+
 def run_causal_inference_for_model(model_path, model_name):
     fitted_model = load_model_pickle(model_path)
 
@@ -23,51 +47,42 @@ def run_causal_inference_for_model(model_path, model_name):
     print("\nCausal / Interventional Inference")
     print("---------------------------------")
 
-    result = causal_inference.query(
-        variables=["dysp"],
-        do={"smoke": "yes"},
-        show_progress=False,
-    )
+    causal_questions = [
+        {
+            "title": "P(dysp | do(smoke=yes))",
+            "query_variables": ["dysp"],
+            "intervention": {"smoke": "yes"},
+            "evidence": None,
+        },
+        {
+            "title": "P(bronc | do(smoke=yes))",
+            "query_variables": ["bronc"],
+            "intervention": {"smoke": "yes"},
+            "evidence": None,
+        },
+        {
+            "title": "P(xray | do(either=yes))",
+            "query_variables": ["xray"],
+            "intervention": {"either": "yes"},
+            "evidence": None,
+        },
+        {
+            "title": "P(dysp | do(smoke=yes), xray=yes)",
+            "query_variables": ["dysp"],
+            "intervention": {"smoke": "yes"},
+            "evidence": {"xray": "yes"},
+        },
+    ]
 
-    print("\nP(dysp | do(smoke=yes))")
-    print(result)
+    for question in causal_questions:
+        print_causal_query(
+            causal_inference=causal_inference,
+            title=question["title"],
+            query_variables=question["query_variables"],
+            intervention=question["intervention"],
+            evidence=question["evidence"],
+        )
 
-    result = causal_inference.query(
-        variables=["xray"],
-        do={"either": "yes"},
-        show_progress=False,
-    )
-
-    print("\nP(xray | do(either=yes))")
-    print(result)
-
-    result = causal_inference.query(
-        variables=["dysp"],
-        do={"smoke": "yes"},
-        evidence={"xray": "yes"},
-        show_progress=False,
-    )
-
-    print("\nP(dysp | do(smoke=yes), xray=yes)")
-    print(result)
-
-    result = causal_inference.query(
-    variables=["bronc"],
-    do={"smoke": "yes"},
-    show_progress=False,
-)
-
-    print("\nP(bronc | do(smoke=yes))")
-    print(result)
-
-    result = causal_inference.query(
-    variables=["dysp"],
-    do={"smoke": "yes"},
-    show_progress=False,
-)
-
-    print("\nP(dysp | do(smoke=yes))")
-    print(result)
 
 def main():
     fitted_models = [
