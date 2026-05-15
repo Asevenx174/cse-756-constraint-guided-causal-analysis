@@ -10,7 +10,7 @@ def main():
     true_model = load_asia_model()
     asia_samples = simulate_asia_samples(n_samples=10000)
     
-      # Default: no expert knowledge.
+    # Default: no expert knowledge.
     # Caution !If you make it false then you will override the non-expert-guided dag
     use_expert_knowledge = True
     knowledge_type = "basic"
@@ -38,7 +38,7 @@ def main():
     scores = evaluate_graph_recovery(
         estimated_model=learned_dag,
         true_model=true_model,
-        algorithm_name="PC stable chi_square",
+        algorithm_name="PC",
         print_scores=True
     )
     

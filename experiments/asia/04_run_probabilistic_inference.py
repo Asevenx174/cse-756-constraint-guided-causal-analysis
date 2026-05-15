@@ -41,6 +41,7 @@ def run_probabilistic_inference_for_model(model_path, model_name):
     print("\nP(xray | either=yes)")
     print(result)
 
+    # return join distribution 
     joint_result = query_probability(
         fitted_model=fitted_model,
         query_variables=["lung", "bronc"],
@@ -51,6 +52,7 @@ def run_probabilistic_inference_for_model(model_path, model_name):
     print("\nJoint query: P(lung, bronc | dysp=yes)")
     print(joint_result)
 
+    # return marginal distribution 
     marginal_results = query_probability(
         fitted_model=fitted_model,
         query_variables=["lung", "bronc"],
